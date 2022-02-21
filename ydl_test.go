@@ -1,7 +1,6 @@
 package ydl
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 	"time"
@@ -77,6 +76,7 @@ func TestDownloadInfo(t *testing.T) {
 	}
 }
 
+/*
 func TestDownload(t *testing.T) {
 	youtubeDl := NewYdl()
 
@@ -89,3 +89,4 @@ func TestDownload(t *testing.T) {
 		fmt.Printf("%f%%, %d bytes, %d rate, %s eta\n", p.Percentage, p.Total, p.Rate, p.ETA)
 	}
 }
+*/
