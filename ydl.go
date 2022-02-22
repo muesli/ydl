@@ -134,9 +134,9 @@ func (ydl *Ydl) Download(u string) (chan Progress, error) {
 }
 
 // FetchInfo retrieves the metadata for a given URL.
-func (ydl *Ydl) FetchInfo(u string) (Info, error) {
+func (ydl *Ydl) FetchInfo(ctx context.Context, u string) (Info, error) {
 	// #nosec G204
-	cmd := exec.Command(ydl.Binary, "-J", u) //nolint:gosec
+	cmd := exec.CommandContext(ctx, ydl.Binary, "-J", u) //nolint:gosec
 	cout, err := cmd.StdoutPipe()
 	if err != nil {
 		return Info{}, err
