@@ -1,6 +1,7 @@
 package ydl
 
 type Format struct {
+	AudioExt    string      `json:"audio_ext"`
 	Ext         string      `json:"ext"`
 	FormatNote  string      `json:"format_note"`
 	Acodec      string      `json:"acodec"`
@@ -28,6 +29,7 @@ type Format struct {
 	} `json:"http_headers"`
 	PlayerURL  string `json:"player_url,omitempty"`
 	Resolution string `json:"resolution,omitempty"`
+	VideoExt   string `json:"video_ext"`
 }
 type Formats []Format
 
@@ -124,4 +126,8 @@ type Info struct {
 	Ext                string           `json:"ext"`
 	Fulltitle          string           `json:"fulltitle"`
 	Filename           string           `json:"_filename"`
+}
+
+type SearchResult struct {
+	Entries []Info `json:"entries"`
 }
