@@ -2,7 +2,9 @@ package ydl
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
+	"fmt"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -133,6 +135,7 @@ func (ydl *Ydl) Download(u string) (chan Progress, error) {
 
 // FetchInfo retrieves the metadata for a given URL.
 func (ydl *Ydl) FetchInfo(u string) (Info, error) {
+	// #nosec G204
 	cmd := exec.Command(ydl.Binary, "-J", u) //nolint:gosec
 	cout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -152,4 +155,31 @@ func (ydl *Ydl) FetchInfo(u string) (Info, error) {
 	}
 
 	return info, cmd.Wait()
+}
+
+// Search returns foobar.
+func (ydl *Ydl) Search(ctx context.Context, term string, amount uint) (SearchResult, error) {
+	// #nosec G204
+	cmd := exec.CommandContext(ctx, ydl.Binary,
+		"-J",
+		fmt.Sprintf("ytsearch%d:%s", amount, term),
+	)
+	cout, err := cmd.StdoutPipe()
+	if err != nil {
+		return SearchResult{}, err
+	}
+
+	if err := cmd.Start(); err != nil {
+		return SearchResult{}, err
+	}
+
+	var result SearchResult
+	if err := json.NewDecoder(cout).Decode(&result); err != nil {
+		// We need to wait for the command to exit, so we don't end up creating
+		// defunct processes.
+		_ = cmd.Wait()
+		return SearchResult{}, err
+	}
+
+	return result, cmd.Wait()
 }
